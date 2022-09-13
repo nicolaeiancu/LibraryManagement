@@ -1,13 +1,14 @@
 package com.example.library.services;
 
 
+import com.example.library.components.Book;
 import com.example.library.components.Library;
 import com.example.library.components.Reader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -41,5 +42,14 @@ public class LibraryService {
             return optional.get();
         }
         throw new Exception("Reader named " + name + " not found!");
+    }
+
+    public void addBooks(Book b, int noCopies) {
+        library.getBooks().put(b, noCopies);
+
+    }
+
+    public Map<Book, Integer> getAllBooks() {
+        return library.getBooks();
     }
 }

@@ -1,12 +1,15 @@
 package com.example.library.controllers;
 
+import com.example.library.components.Book;
 import com.example.library.components.Library;
 import com.example.library.components.Reader;
 import com.example.library.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 
@@ -34,5 +37,16 @@ public class LibraryController {
     @GetMapping("/getReaderByName/{name}")
     public Reader getReaderWithName(@PathVariable String name) throws Exception {
         return libraryService.getReaderByName(name);
+    }
+
+    @PutMapping("/addBook")
+    public String addBooks(@RequestParam String author, @RequestParam String title, @RequestParam int noPages, @RequestParam int noCopies){
+        libraryService.addBooks(new Book(author, title, noPages), noCopies);
+        return "Book named "+title+" written by "+author+" with "+noCopies+" was succesfully introduced!";
+    }
+
+    @GetMapping("/getAllBooks")
+    public Map<Book, Integer> getBooks(){
+        return libraryService.getAllBooks();
     }
 }

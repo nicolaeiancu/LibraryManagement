@@ -1,10 +1,11 @@
 package com.example.library.components;
 
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 @Component
-@Getter
+@Data
 public class Book {
     private String author;
     private String title;
