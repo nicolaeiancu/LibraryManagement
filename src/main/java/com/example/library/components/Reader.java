@@ -1,15 +1,21 @@
 package com.example.library.components;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Component
 @Data
+@Entity(name="Readers")
 public class Reader {
-    String id;
-    String name;
-    List<Book> borrowed;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="readerID")
+    private String id;
+    @Column
+    private String name;
+    @Column
+    private List<Book> borrowed = new ArrayList<>();
 
     public Reader(String id, String name) {
         this.id = id;

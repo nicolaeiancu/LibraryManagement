@@ -1,10 +1,8 @@
 package com.example.library.components;
 
 import lombok.Data;
-import lombok.Getter;
-import org.springframework.stereotype.Component;
+import java.util.Objects;
 
-@Component
 @Data
 public class Book {
     private String author;
@@ -15,6 +13,19 @@ public class Book {
         this.author = author;
         this.title = title;
         this.noPages = noPages;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return noPages == book.noPages && Objects.equals(author, book.author) && Objects.equals(title, book.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(author, title, noPages);
     }
 
     public Book() {

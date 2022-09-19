@@ -7,7 +7,6 @@ import com.example.library.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +19,13 @@ public class LibraryController {
 
 
     @PutMapping("/addReader")
-    public String addReaders(@RequestParam String id, @RequestParam String name) throws Exception{
-        libraryService.addReaders(new Reader(id, name));
-        return "Reader " + name + " was succesfully added!";}
+    public String addReader(@RequestParam String id, @RequestParam String name) throws Exception {
+        libraryService.addReader(new Reader(id, name));
+        return "Reader " + name + " was successfully added!";
+    }
 
     @GetMapping("/getAllReaders")
-    public List<Reader> getReaders(){
+    public List<Reader> getReaders() {
         return libraryService.getAllReaders();
     }
 
@@ -40,13 +40,41 @@ public class LibraryController {
     }
 
     @PutMapping("/addBook")
-    public String addBooks(@RequestParam String author, @RequestParam String title, @RequestParam int noPages, @RequestParam int noCopies){
-        libraryService.addBooks(new Book(author, title, noPages), noCopies);
-        return "Book named "+title+" written by "+author+" with "+noCopies+" was succesfully introduced!";
+    public String addBook(@RequestParam String author, @RequestParam String title, @RequestParam int noPages, @RequestParam int noCopies) {
+        libraryService.addBook(new Book(author, title, noPages), noCopies);
+        return "Book named " + title + " written by " + author + " with " + noCopies + " copies was successfully introduced!";
     }
 
     @GetMapping("/getAllBooks")
-    public Map<Book, Integer> getBooks(){
+    public Map<Book, Integer> getBooks() {
         return libraryService.getAllBooks();
     }
+
+    @PutMapping("/borrowBook")
+    public String borrowBook(@RequestParam String readerId, @RequestParam String title) throws Exception {
+        if (libraryService.isUserPresent(readerId, title)) {
+            libraryService.verifyStock(title);
+            checkIfBookAlreadyBorrowed(readerId, title);
+            libraryService.borrowBook(readerId, title);
+        } else {
+            throw new Exception("User not found!");
+        }
+        return "Book " + title + " was borrowed by reader with id " + readerId;
+    }
+
+    @PutMapping("/returnBook")
+    public String returnBook(@RequestParam String readerId, @RequestParam String title){
+        libraryService.returnBook(readerId, title);
+
+
+        return "Book named " + title + " was returned by reader with id " + readerId;
+    }
+
+
+    private void checkIfBookAlreadyBorrowed(String readerId, String title) throws Exception {
+        if (libraryService.isBookAlreadyBorrowed(readerId, title)) {
+            throw new Exception(String.format("Book %s already borrowed by reader with id %s", title, readerId));
+        }
+    }
+
 }
